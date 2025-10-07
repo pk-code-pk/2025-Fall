@@ -1,12 +1,9 @@
 \documentclass[11pt]{article}
-\usepackage{IntroAlgorithmsAndLimitations}
-
-
+\usepackage{Fall25/cs1200}
 
 
 \begin{document}
 
-% To include a problems set header, use the psHeader command
 \psHeader{4}{Wed Oct. 8, 2025 (11:59pm)}
 
 Please see the syllabus for the full collaboration and generative AI policy, as well as information on grading, late days, and revisions.
@@ -75,7 +72,7 @@ If you did not have any collaborators or external resources, please write 'none.
     \compprob{\WeightedSelection}
 {An array $A$ of key-value-weight triples $((K_0,V_0,W_0),\ldots,(K_{n-1},V_{n-1},W_{n-1}))$, where $K_i, W_i\in \N$,  and a threshold $t\in \N$}
 { A key-value-weight triple $(K_i,V_i,W_i)$ such that $\sum_{j : K_j<K_i} W_j \leq t$ and 
-$\sum_{j : K_j>K_i} W_j \leq W-W_i-t$, where $W=\sum_{j=0}^{n-1}$ W_j}
+$\sum_{j : K_j>K_i} W_j \leq W-1-t$, where $W=\sum_{j=0}^{n-1}$ W_j}
 
 
     For motivating application, consider the keys to be the customer ages, the weights to be the number of times they visited the club, and $t=W/2$. 
