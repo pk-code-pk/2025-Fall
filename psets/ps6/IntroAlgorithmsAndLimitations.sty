@@ -66,6 +66,7 @@
 \newcommand{\zach}[1]{\ifdraft{\todo[inline,color=blue!20!white]{\textbf{Zach:} #1}}\fi}
 \newcommand{\salil}[1]{\ifdraft{\todo[inline,color=purple!20!white]{\textbf{Salil:} #1}}\fi}
 \newcommand{\anurag}[1]{\ifdraft{\todo[inline,color=green!20!white]{\textbf{Anurag Anshu:} #1}}\fi}
+\newcommand{\matt}[1]{\ifdraft{\todo[inline,color=blue!20!white]{\textbf{Matt:} #1}}\fi}
 
 \newcommand{\anuragg}[1]{\textcolor{green}{\textbf{Anurag Anshu:} #1}}
 \newcommand{\adam}[1]{\ifdraft{\todo[inline,color=orange!20!white]{\textbf{Adam:} #1}}\fi}
@@ -195,7 +196,8 @@
 \SetKwFunction{RandomSubsampling}{RandomSubsampling}
 \SetKwFunction{MergeSortSelect}{MergeSortSelect}
 \SetKwFunction{MedianQuickSelect}{Median-of-3 QuickSelect}
-
+\SetKwFunction{BronKerbosch}{BronKerbosch}
+\SetKwFunction{MaximalISColoring}{MaximalIS+BFS}
 
 \newcommand{\compprobname}[1]{\text{\sc #1}}
 \newcommand{\IndependentSet}{\compprobname{Independent Set}}
@@ -219,12 +221,16 @@
 \newcommand{\Selection}{\compprobname{Selection}}
 \newcommand{\KeywordSearch}{\compprobname{Keyword Search}}
 \newcommand{\Sorting}{\compprobname{Sorting}}
+\newcommand{\SAT}{\compprobname{Satisfiability}}
+\newcommand{\CNFSAT}{\compprobname{CNF-Satisfiability}}
+\newcommand{\DNFSAT}{\compprobname{DNF-Satisfiability}}
 \newcommand{\SortingFinite}{\compprobname{SortingOnFiniteUniverse}}
 \newcommand{\SortingBignum}{\compprobname{SortingBignums}}
 \newcommand{\SortingOnNaturalNumbers}{\compprobname{SortingOnNaturalNumbers}}
 \newcommand{\IntervalScheduling}{\compprobname{IntervalScheduling}}
 \newcommand{\IntervalSchedulingDecision}{\compprobname{IntervalScheduling--Decision}}
 \newcommand{\IntervalSchedulingOptimization}{\compprobname{IntervalScheduling--Optimization}}
+\newcommand{\IntervalSchedulingColoring}{\compprobname{IntervalScheduling--Coloring}}
 \newcommand{\IntervalSchedulingDecisionFinite}{\compprobname{IntervalScheduling--Decision--OnFiniteUniverse}}
 \newcommand{\IntervalSchedulingQueries}{\compprobname{IntervalScheduling--Queries}}
 \newcommand{\SearchSortedArray}{\compprobname{SearchSortedArray}}
@@ -240,7 +246,8 @@
 \newcommand{\RangeSelect}{\compprobname{RangeSelect}}
 \newcommand{\AreaOfConvexPolygon}{\compprobname{AreaOfConvexPolygon}}
 \newcommand{\DuplicateSearch}{\compprobname{DuplicateSearch}}
-\newcommand{\MaximumMatching}{\compprobname{MaximumMatching}}
+\newcommand{\MaximumMatching}{\compprobname{Maximum Matching}}
+\newcommand{\MaximumWeightedMatching}{\compprobname{Maximum Weighted Matching}}
 \newcommand{\ConvexHull}{\compprobname{ConvexHull}}
 
 %\SetAlgoProcName{Computational Problem}{Computational Problem}
@@ -326,6 +333,8 @@
 
 \newcommand{\details}[2]{\ifdetails #1 \else \ \\\vspace{#2ex}\fi}
 %\newcommand{\details}[2]{\ifdetails #1 \else \phantom{#1}\fi}
+\newif\ifsolutions
+\newcommand{\solution}[2]{\ifsolutions{\color{blue} #1} \else \vspace{#2} \fi}
 
 \newif\ifsolutions
 
@@ -488,6 +497,7 @@
 %\newcommand{\deg}{\mathrm{deg}}
 \newcommand{\Nout}{\mathrm{N}_{\mathit{out}}}
 \newcommand{\Nin}{\mathrm{N}_{\mathit{in}}}
+\newcommand{\Nbr}{\texttt{Nbr}}
 \newcommand{\Nbrout}{\texttt{Nbr}_{\texttt{out}}}
 \newcommand{\Nbrin}{\texttt{Nbr}_{\texttt{in}}}
 \newcommand{\distarr}{\texttt{dist}}
