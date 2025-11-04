@@ -16,13 +16,13 @@ If you did not have any collaborators or external resources, please write 'none.
 
 \vspace{1em}
 
-\textbf{Your name: }
+\textbf{Your name: Praneel Khiantani }
 
 \textbf{Collaborators: }
 
-\textbf{No. of late days used on previous psets: }
+\textbf{No. of late days used on previous psets: 3 }
 
-\textbf{No. of late days used after including this pset: }
+\textbf{No. of late days used after including this pset: 6}
 
 \begin{enumerate}
  \item (\GreedyColoring\ for \IntervalScheduling) The \IntervalSchedulingOptimization\ problem we studied in class finds the largest group of nonintersecting intervals. 
@@ -36,13 +36,62 @@ Let $k$ be the maximum number of input intervals that contain any value $t\in \Q
  
  \begin{enumerate}
      \item Prove that every coloring for the \IntervalScheduling\ instance $x$ uses at least $k$ colors.
+
+\medskip 
+
+
+\IntervalScheduling\ is defined by events $x_i = (a_i,b_i)$ where $a_i$ is the start time of the interval and $b_i$ is the end time. To represent this problem as a graph, each vertex is represented by the interval $x_i$, where vertices are adjacent iff their intervals overlap each other in timings. In other words, vertices are considered adjacent in the case that $[a_i, b_i] \cap [a_j, b_j] \neq \emptyset$
+. By the definition of coloring, all adjacent vertices must receive different colors. Thus, for the time $t_{m}\in t$, where $t_m$ is the time that maximizes the value of $|\{ i\in [n]: t\in x_i\}|$ (the cardinality of the set of overlapping time intervals), we must have a unique color for all members of the set $\{ i_m\in [n]: t\in x_m\}$. By definition, 
+
+$$k = \max_{t\in \Q} |\{ i\in [n]: t\in x_i\}| = |\{ i_m\in [n]: t\in x_m\}|$$
+
+Thus, there must be at least $k$ colors in-order to generate any valid coloring for the \IntervalScheduling\ instance $x$. 
+
+
+
+     
      \item Show that \GreedyColoring\ in order of {\em increasing start time} uses at most $k$ colors.  (To develop your intuition, carry out the algorithm on a few examples.)
+
+\GreedyColoring\ in order of increasing start time allows us create "active" intervals which keeps track of all currently conflicting events at any time $t$. When a new event $x_i=(a_i,b_i)$ starts, it must receive a different color than all other active intervals because those overlap with it. If $a_i <b_j $ for some previous $x_j$, then $x_i$ must recieve a unique coloring. 
+
+By definition, $k = \max_{t\in \Q} |\{ i\in [n]: t\in x_i\}| = |\{ i_m\in [n]: t\in x_m\}|$. In other words, there are always at most $k-1$ intervals active at a given time. Otherwise, if we had $k+1$ intervals active, we'd violate the definition of $k$ that states it is the maximum cardinality of the set of overlapping events. So since at most $k-1$ colors are in use when each interval arrives, there will always be a free color among $k$.  
+
+
+
+
+     
      \item Show that the \GreedyColoring\ in order of increasing start time can be correctly implemented in time $O(n\log n+nk)$. 
      (Hint: keep track of the end times of the most recently scheduled intervals assigned to each color.  For correctness, ensure that your algorithm faithfully implements \GreedyColoring.) 
 
+     To implement \GreedyColoring\ in order of increasing start time, we must first sort our intervals $x_i = (a_i, b_i)$ by the start times of each interval ($a_i$) in increasing order. We can use merge sort or a similarly efficient sorting algorithm, making this step take $O(n\log{n})$. (By definition of Mergesort) 
+
+     Now that we've sorted all $(x_0, x_1 \dots x_n)$ by increasing start time, we can start to implement our coloring algorithm. 
+
+     To do this, we define an array $\texttt{end[]}$, with indexes $0, 1, \dots k-1$, to represent all possible colorings. This array will track the endpoint of the event in which each color was last used ($b_i$), which will tell us if it is viable to use for the current $x_i$ we would like to color. 
+
+     For each $x_i$, we assign it any open color from $\texttt{end[]}$, meaning any color $c$ such that $\texttt{end[c]} <= a_i. $ If no such color exists, we create a new color in the first empty cell and assign ${\texttt{end[c]}} = b_i$. 
+
+     Thus, the color assignment runs at $O(kn)$, as for each $x_0, x_1, \dots x_n$ we have to check through at most $k$ colors from $\texttt{end[]}$. 
+
+     To conclude, this correctly implements \GreedyColoring\ as it always assigns the smallest available color that does not conflict. 
+
+
+
+
+
+
+
+
+
+
+     
+
      \item (Extra credit\footnote{Solutions to this part will not affect differences between N, L, R-, and R grades, but can help achieve an R+})
      Using an appropriate data structure, improve the runtime to $O(n\log n+n\log k) = O(n\log n)$.
-     (Hint: You may instead implement a \emph{variant} of \GreedyColoring\ in which, at every step, you can assign a vertex either the smallest available color or \emph{any already-used color that is not assigned to any of its neighbours} (as opposed to standard \GreedyColoring\ in which we always assign the smallest color).) 
+     (Hint: You may instead implement a \emph{variant} of \GreedyColoring\ in which, at every step, you can assign a vertex either the smallest available color or \emph{any already-used color that is not assigned to any of its neighbours} (as opposed to standard \GreedyColoring\ in which we always assign the smallest color).)  
+
+
+
 
 \end{enumerate}
 
@@ -56,15 +105,58 @@ Let $k$ be the maximum number of input intervals that contain any value $t\in \Q
     \begin{enumerate}
         \item Show that given a graph $G$, a maximal independent set can be found in time $O(n+m)$.  Note that this is in sharp contrast to {\em maximum-size} independent sets, for which we do not know any subexponential-time algorithms. (Hint: be greedy.)\\
 
+
+
+Given a graph $G=(V,E)$, we can find a maximal independent set in time $O(n+m)$ using \GreedyIndSet(G)\, which takes an input of graph $G$, and outputs a maximal independent set $S \subseteq V$. Given an ordering of vertices $v \in V$, (where $|V| = n, |E| = m$), \GreedyIndSet(G) loops through each $v_i$, checking it's neighbors using edges $m_i = (v_i, u)$ (all edges that originate from $v_i$ to any vertex $u$), and if even one of these neighbors $u_0, u_1,\dots \in S$, then we cannot add $v_i$ to $S$. Else, we add $v_i$ to set $S$. This results in a maximal independent set $S$ as per Algorithm 14.1 in Chapter 14. $S$ can be found in $O(n+m)$, because at worst, we must check every vertex $v \in V$, where $|V|=n$, and each edge $e \in E$ , where $|E| =m$. Thus, our runtime is a function of all the vertices and edges that exist in graph $G$, which is equivalent to $O(n+m)$. 
+
+
+\medskip 
  
         
         \item Show that if $G$ is 3-colorable, then it has a 3-coloring $f$ in which the set of vertices of color 2 (i.e. $f^{-1}(2)$) is a maximal independent set.\\
 
-        
+By the question, we have a 3-colorable graph $G(V,E)$, with vertices $v \in V$, our set of vertices, and edges $m = (u,v) \in E$, our set of edges. 
+Let's start by assuming that the set of vertices of color 2, $S = f^{-1}(2)$, is NOT a maximal independent set. This means that there exists, without loss of generality, $\{v_i \in V: v_i \notin f^{-1}(2) \text{ and } N(v_i) \cap S = \emptyset\}$ (Where $N(v_i)$ represents the neighbors of $v_i$). To make $(f^{-1}(2)$ a maximal independent set, we must change the coloring of each $v_i$, one by one, such that $v_i \in f^{-1}(2)$, which can safely be done as $v_i$ has no neighbors in $S$. We repeat this process while such a $v_i$ exists, and each recoloring increases $|S|$, and the process will terminate at some point since there is a finite amount of vertices. Thus, we result in a proper 3-coloring where $S = f^{-1}(2)$ is now a maximal independent set (since no vertex outside $S$ is free of 2-color neighbors.) 
+
+So, to conclude, there exists a 3-coloring of $G$ such that $S = f^{-1}(2)$ forms a maximal independent set. 
 
 
         
         \item It is known that every graph $G$ has at most $3^{n/3}$ maximal independent sets, and there is an algorithm (the Bron--Kerbosch algorithm) that enumerates all of the maximal independent sets in time $O(3^{n/3}).$  Use this fact to conclude that 3-coloring can be solved in time $O((n+m)\cdot 3^{n/3}) = O(1.45^n),$ improving the runtime of $O(1.89^n)$ from SRE4.\\
+
+
+
+
+First, we'll let \(G=(V,E)\) be a graph with \(n=|V|\) and \(m=|E|\). 
+
+It's known that every graph has at most \(3^{n/3}\) maximal independent sets (MIS), and also that the Bron--Kerbosch algorithm enumerates all MIS in time \(O(3^{n/3})\).
+
+We can now use this to decide and construct a \(3\)-coloring in time \(O((n+m)\,3^{n/3})\).
+
+For our algorithm, we'll do as follows:
+  \item Enumerate all maximal independent sets \(S \subseteq V\) of \(G\) (which we can do by running Bron--Kerbosch on the complement graph). There are at most \(3^{n/3}\) such sets, and the total enumeration time is going to be \(O(3^{n/3})\).
+  \item For each enumerated \(S\), we have to test whether the induced subgraph \(G[V\setminus S]\) is bipartite using BFS/DFS. This test takes \(O(n+m)\) time.
+  \item If \(G[V\setminus S]\) is bipartite, we get a \(2\)-coloring of \(G[V\setminus S]\) with colors \(\{1,3\}\), and assign color \(2\) to all vertices in \(S\). This yields a valid \(3\)-coloring of \(G\). And, if no \(S\) passes the test, report that \(G\) is not \(3\)-colorable.
+\end{enumerate}
+
+If this algorithm passes, then at step (3) we produce a correct \(3\)-coloring: \(S\) is independent (color \(2\)), and \(G[V\setminus S]\) is properly \(2\)-colored, so no edge ends up monochromatic.
+
+Conversely, if we suppose \(G\) is \(3\)-colorable, then:
+
+By part (2b), there exists a \(3\)-coloring \(f\) whose color-\(2\) class \(S^\star=f^{-1}(2)\) is a maximal independent set. 
+
+Our enumeration is going to include \(S^\star\). In that coloring, the leftover vertices \(V\setminus S^\star\) receive only colors \(\{1,3\}\), so the induced subgraph \(G[V\setminus S^\star]\) is bipartite. At the point the algorithm reaches \(S^\star\), the bipartiteness test succeeds and we recreate a valid \(3\)-coloring.
+
+(equivalenty, even if one starts from a color class that is NOT maximal, enlarging it to a maximal independent set can only remove vertices from the remainder, and induced subgraphs of bipartite graphs remain bipartite, so some MIS works)
+
+In terms of the runtime, there are at most \(3^{n/3}\) MIS, and we'll spend \(O(n+m)\) time on the bipartiteness test for each one. So, the total time is
+\[
+O\big((n+m)\,3^{n/3}\big).
+\]
+And because \(3^{1/3}\approx 1.4427\), this is \(O(1.45^n)\), which improves the \(O(1.89^n)\) bound as required by the question. 
+
+
+
 
 
 
@@ -99,8 +191,66 @@ Let $k$ be the maximum number of input intervals that contain any value $t\in \Q
     
     In addition to these numeric values, please provide a brief explanation of why these results make sense, based on your knowledge of both the algorithms' runtime and how each algorithm goes about finding a coloring. For this part, there is no need to go through every combination of parameters; feel free to give just the largest and smallest instances each algorithm can solve and speak generally as to why one algorithm performs better than the other. Make sure to also include a comparison between the types of graphs (i.e. do your algorithms perform better on the Line of Rings or the Randomized Cluster Connections? Why?). More instructions can be found in \texttt{ps6\_experiments}.
 
+for each family we'll report the largest $n$ solved, and then also the smallest $n$ unsolved. 
 
-    
+
+\medskip 
+
+\medskip
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lcc}
+\toprule
+\multicolumn{3}{c}{{Line of Rings} (ring sizes 3–5; 100–200 rings)}\\
+\midrule
+Algorithm & Largest $n$ solved & Smallest $n$ unsolved \\
+Exhaustive 3-color & --- & 300 \\
+MIS + BFS          & $\ge 1000$ & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lcc}
+\toprule
+\multicolumn{3}{c}{{Randomized Clusters} ($C{=}3$, $p{=}0.35$, sizes tried $n\in\{6,30,54\}$)}\\
+\midrule
+Algorithm & Largest $n$ solved & Smallest $n$ unsolved \\
+Exhaustive 3-color & 6  & 30 \\
+MIS + BFS          & 30 & 54 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\medskip 
+
+\medskip 
+\bigskip 
+
+\bigskip 
+
+\bigskip 
+
+
+
+
+
+
+
+
+
+
+Exhaustive 3-coloring will explore up to $3^n$ assignments, and then it times out early (we can see already at $n{=}300$ on Line of Rings), while MIS\,+\,BFS enumerates at most $3^{n/3}$ maximal independent sets and does an $O(n{+}m)$ bipartite check per each ser, so it scales way further (to about $n{=}1000$ on Line of Rings).  
+And then, on Randomized Clusters, MIS\,+\,BFS still outperforms exhaustive (solves $n{=}30$ where exhaustive actually times out), with the cutoff around $n{=}54$ for this specific setting.  
+
+
+As a whole, the experiments match our theory: $(1.44)^n$–style growth for MIS\,+\,BFS beats the $3^n$ behavior of exhaustive search.
+
 
  
     
