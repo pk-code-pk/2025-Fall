@@ -12,7 +12,7 @@ We already implemented exhaustive search and augmentation of 2-coloring algorith
 
 **Problem 1a**: Implement the reduction from 3-coloring to SAT given in class,  producing an input that can be fed into the SAT Solver Glucose, and verify its correctness by running `python3 -m ps8_tests 3`.
 
-**Problem 1b**: Run the algorithm on the generated graphs via `ps8_experiments.py`.
+**Problem 1b**: Run the algorithm on the generated graphs via `python3 ps8_experiments.py`.
 
 ## Running the Code
 
