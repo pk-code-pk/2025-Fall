@@ -230,10 +230,6 @@ testcases = {
         lambda: generate_hard_instance_from_coloring(Graph, 10_000, eta, seed=10)
         for eta in [4.95, 4.96, 4.97, 5.1]
     ],
-    "large-random-graphs-colored (2)": [
-        lambda: generate_hard_instance_from_coloring(Graph, 1_500, eta, seed=10)
-        for eta in [6.75, 6.85, 6.9]
-    ]
 }
 
 def test_3_coloring():
@@ -282,14 +278,6 @@ def test_3_coloring():
             lambda g: validate_graph_coloring(g, sat_3_coloring(g)),
             lambda g: True,
         ) for g in testcases["large-random-graphs-colored"]
-    ]
-    tests["SAT 3-Coloring"] += [
-        generate_test(
-            "Should work on large random graphs pre-colored modified",
-            g,
-            lambda g: validate_graph_coloring(g, sat_3_coloring(g)),
-            lambda g: True,
-        ) for g in testcases["large-random-graphs-colored (2)"]
     ]
     run_tests(tests)
 

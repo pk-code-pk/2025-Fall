@@ -3,7 +3,7 @@ import os
 import pickle
 import random
 from time import time
-from ps8_helpers import timeout, color, generate_line_of_ring_subgraphs, generate_random_linked_cluster
+from ps8_helpers import timeout, color, generate_line_of_ring_subgraphs, generate_random_linked_cluster, generate_hard_instance_from_coloring, convert_to_graph_object, create_erdos_renyi_graph, create_dense_core_graph, generate_hard_coloring_graphs
 from ps8 import Graph, exhaustive_search_coloring, iset_bfs_3_coloring, sat_3_coloring
 import sys
 import ps8
@@ -133,27 +133,28 @@ def pickle_graphs():
         type_of_graph = "noncolorable"
     erdos_renyi_graph = create_erdos_renyi_graph(n, probability_cutoff)
     custom_graph = convert_to_graph_object(Graph, erdos_renyi_graph)
-    with open(f'./hard_instances_v2/{n}_node_instance_erdos_{type_of_graph}.pkl', 'wb') as f:
+    with open(f'./hard_instances/{n}_node_instance_erdos_{type_of_graph}.pkl', 'wb') as f:
         pickle.dump(custom_graph, f)
 
     # Dense Core graph generation and Pickle dumping code (keep commented out)
     for cycle_length in [6000, 100000, 300000, 600000]:
         print(f"generating dense core graph with cycle length {cycle_length}")
         dense_core_graph = create_dense_core_graph(Graph, cycle_length)
-        with open(f'./hard_instances_v2/{cycle_length}_length_cycle_dense_core.pkl', 'wb') as f:
+        with open(f'./hard_instances/{cycle_length}_length_cycle_dense_core.pkl', 'wb') as f:
             pickle.dump(dense_core_graph, f)
 
     # Graph generation and Pickle dumping code (keep commented out)
     print("Constructing a hard instance")
     for nodes in [142, 1102, 11009, 110024, 164970, 197912]:
         g = generate_hard_coloring_graphs(Graph, 1000)
-        with open(f'./hard_instances_v2/{nodes}_node_instance.pickle', 'wb') as f:
+        with open(f'./hard_instances/{nodes}_node_instance.pickle', 'wb') as f:
             pickle.dump(g, f)
 
+    for eta in [6.75, 6.85, 6.9]:
+        coloring_g = generate_hard_instance_from_coloring(Graph, 1_500, eta, seed=10)
+        with open(f'./hard_instances/{eta}_eta_instance.pickle', 'wb') as f:
+            pickle.dump(coloring_g, f)
 
-def hard_instance_benchmark():
-    print("Hard instances")
-    print()
 
     # # Erdős-Rényi graph generation and Pickle dumping code (keep commented out)
     # n = 500
@@ -181,6 +182,9 @@ def hard_instance_benchmark():
     # with open(f'{g.N}_node_instance.pickle', 'wb') as f:
     #     pickle.dump(g, f)
 
+def hard_instance_benchmark():
+    print("Hard instances")
+    print()
     # Pickle loading code
     print("Reading a hard instance from Pickle file")
     for filename in sorted(os.listdir('./hard_instances'), key=lambda x: int(x.split('_')[0])):
@@ -218,4 +222,4 @@ def hard_instance_benchmark():
 if __name__ == "__main__":
     benchmark()
     hard_instance_benchmark()
-    # pickle_graphs()
+    # pickle_graphs() # Uncomment this file to repickle the graphs (Try with different params! Warning: Creating the graphs may take some time)
