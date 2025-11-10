@@ -11,13 +11,13 @@ All sources of ideas, including (but not restricted to) any collaborators, AI to
 
 If you did not have any collaborators or external resources, please write 'none.' Please remember to select pages when you submit on Gradescope. A problem set on the border between two letter grades cannot be rounded up if pages are not selected. 
 
-\textbf{Your name: }
+\textbf{Your name: Praneel Khiantani }
 
 \textbf{Collaborators: }
 
-\textbf{No. of late days used on previous psets: }
+\textbf{No. of late days used on previous psets: 6 }
 
-\textbf{No. of late days used after including this pset: }
+\textbf{No. of late days used after including this pset: 6}
 
 
 The purpose of this problem set is to practice modeling problems using graphs, reinforce understanding of the matching algorithm we learned, and think about ethical issues raised when modeling real-world problems for algorithmic solution.
@@ -36,10 +36,109 @@ Given a schematic like this, Lyber's goal is to serve as many customers (labeled
     \begin{enumerate}
     \item To perform the assignment, they reduce to \MaximumMatching\ in bipartite graphs.  Draw a bipartite graph corresponding to the drivers and customers in the map above.
 
+\(E = \{(4,A),(2,A),(3,A),(3,B),(5,C),(6,C),(1,C),(3,C),(4,D),(3,D),(5,D),(5,E),(3,E)\}\)
+Graph can be found in Figure 1. 
 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{Screenshot 2025-11-04 at 1.05.43 AM.png}
+    \caption{Part A}
+    \label{fig:placeholder}
+\end{figure}
     
     \item The Lyber app first prioritizes customers on Broadway, so they initially assign customer $A$ to driver 3 and customer $C$ to driver 5. Using the algorithm from class, find a \textit{maximum matching} in the bipartite matching graph you've drawn, starting from the initial matching of $A$ to 3 and $C$ to 5. Draw pictures showing the sequence of matchings and augmenting paths you find. (No need to break down the steps of the algorithm to find the augmenting paths.)
     \end{enumerate}
+
+
+$M_0 = \{(A,3), (C,5)\}$\\
+$P_1 = D-4$\\
+$M_1 = M_0 \triangle P_1 = \{(A,3), (C,5), (D,4)\}$\\
+$P_2 = B - 3-A-2$\\
+$M_2 = M_1 \triangle P_2 = \{(B,3), (C,5), (D,4), (A,2)\}$\\
+$P_3 = E- 5-C-1$\\
+$M_3 = M_2 \triangle P_3 = \{(B,3), (C,1), (D,4), (A,2), (E,5)\}$\\
+
+Since there is only a single unmatched vertex $6$ remaining, by Berge's Theorem, our current matching $M_3$ is a $maximum$ $matching$. Every customer is matched to a driver, and there is no remaining augmenting path. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{Screenshot 2025-11-04 at 1.18.28 AM.png}
+    \caption{B(1) above and B(2) below (I said maximal, I meant maximum matching)}
+    \label{fig:placeholder}
+    \centering
+    \includegraphics[width=0.6\linewidth]{Screenshot 2025-11-04 at 1.18.41 AM.png}
+    \caption{B(2)}
+    \label{fig:placeholder}
+\end{figure}
+
+
+
+% N = number of lines worth of space
+\vspace*{12\baselineskip}  % ~12 lines of space
+% or a fixed length:
+\vspace*{6cm}
+
+% N = number of lines worth of space
+\vspace*{12\baselineskip}  % ~12 lines of space
+% or a fixed length:
+\vspace*{6cm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -54,6 +153,30 @@ Given a schematic like this, Lyber's goal is to serve as many customers (labeled
         \begin{enumerate}
         \item Prove that if $G=(V,E)$ is a graph and $M\subseteq E$ is a matching in $G$, then there is a maximum-size matching $M'$ such that $\cup M \subseteq \cup M'$.  (Hint: consider constructing a maximum matching via augmenting paths, but starting with $M_0=M$ rather than $M_0=\emptyset$. What can you say about the $\cup {M_i}$'s?) \label{part:monotonicity}\\
 
+        This proof can be done by a loop invariant, focusing on constructing a maximum matching through augmenting paths, but beginning with $M_0=M$. 
+
+        At the beginning of our construction:
+        \begin{itemize}
+            \item $M_0=M$
+            \item $\cup M = \{u \in V: \exists v \in V$ s.t. $\{u,v\} \in M\}$.
+            \item $\cup M_0 = \cup M$
+  \end{itemize}
+        We then find an augmenting path $P$ with respect to $M_i$, which consists of 2 types of vertices $a \in P$:
+        
+        \begin{itemize}
+            \item an unmatched vertex (the start and end vertices of any augmenting path $P$) - When we perform the symmetric difference $ M_i \triangle P$, this vertex becomes a part of $\cup M_{i+1}$. Thus, $a \in \cup M_{i+1}$
+            \item a matched vertex (the interior vertices of any augmenting path $P$, $a \in \cup M_i$) - When we perform the symmetric difference $ M_i \triangle P$, matched edges are removed from $M_{i}$, however, the vertices themselves remain. Since every interior vertex $a$ is incident to a matched edge, even if we remove the matched edges in path $P$ from $M_i$ to form $M_{i+1}$, the vertices are still added to $\cup M_{i+1}$ through the new matched edges added to $M_{i+1}$. Thus, $a \in \cup M_i$ and $a \in \cup M_{i+1}$, so $\cup M_i\subseteq\cup M_{i+1}$
+        \end{itemize}
+
+        Also note that any vertices $\{v \in \cup M_i: v \notin P\}$ remain unaffected by the symmetric difference computed at each $M_{i+1} \space \space (M_{i+1} = M_i \triangle P_i)$. Since these $v$ were in the $\cup M_i$ before $M_{i+1}$, and $v \notin P_i$, then they remain in the matching. 
+
+        We repeat this step, finding an augmenting path, and updating our $M_{i+1}$ until there are no $P$ (augmenting paths left). Then, by Berge's Theorem, we have found a $maximum$ $matching$. Since, at every step from the beginning of our construction to the end of our construction, we have shown that $\cup M_i \subseteq \cup M_{i+1} \subseteq \cup M_{i+2} \dots$, we can conclude that:
+        $$  \cup M_0 \subseteq \cup M_1 \subseteq \dots \cup M_i \subseteq \cup M_{i+1} \subseteq \dots  \cup M' $$
+
+        $$(\text{where } M' \text{ is our Maximum Matching}) $$
+        
+    
+
 
 
         \item   In the ethical and social considerations lecture/chapter, we saw how simply maximizing the {\em size} of a matching may not always be the right objective, and this motivated us to study the \MaximumVertexWeightedMatching\ problem, where we are given a vertex-weighted graph $G=(V,E,w)$ and our goal is to find a matching $M$ that maximizes $w(M) = \sum_{v \in \cup M} w(v)$.
@@ -62,6 +185,28 @@ Given a schematic like this, Lyber's goal is to serve as many customers (labeled
         both $w(M)\leq w(M^*)$ and $|M|\leq |M^*|$.\\
         \ \\
         (In fact, the algorithm we have seen for \MaximumMatching\ can be modified to also give an efficient algorithm that simultaneously solves \MaximumVertexWeightedMatching, but we are not asking you to give an algorithm here.)
+
+Let's start with our assumption from lecture that we have nonnegative weights, $\; w(v)\ge 0 \;\; \forall v\in V.$ This just ensures that when we maximize our matching, we can never decrease the weight of our matching by adding new vertices. 
+
+Since there are a finite number of possible matchings $M_0, M_1,\dots, M_n$, it can be said that $\exists M_w : w(M_w) = \max{\{w(M_0), w(M_1), \dots w(M_n)\}} $. (There is a weight optimized matching $M_w$ with the highest weight of all possible matchings $M_0 \dots M_n$.) Thus, starting with our matching $M_w$, we know from part (a) that running the augmenting path algorithm to maximize our size from any existing matching $M$, in this case $M_w$, satisfies  $$  \cup M_w\subseteq \cup M_{w+1} \subseteq \cup M_{w+2} \subseteq \dots  \cup M_w' $$
+
+Where $M_w' = M^*$
+
+
+Thus, running an augmenting path algorithm to obtain a maximum-size matching $M_w'$ necessarily satisfies   $|M_w| \leq |M^*|$ (Since we run our augmenting path algorithm which returns a maximum-size matching that, by definition, satisfies this condition, starting at $M_w$).  
+
+
+Also, as shown in part (a), $\cup M_w\subseteq \cup M^*$, so:
+
+Since weight is attached to each vertex, and we are starting with a weight maximizing matching $M_w$, then $w(M_w)\leq w(M^*)$, since there are only 2 cases when enlarging the matched vertex set:
+
+Case 1) We add positive-weight vertices to $\cup M_w$ at each step to get to $\cup M^*$, so $w(M_w) < w(M^*)$. However, \( M_w \) is already a maximum-weight matching, so case 1 is impossible.  
+
+Case 2) Or, we are keeping $\cup M_w$ the same, or adding zero-weight vertices, which yields $w(M_w) = w(M^*)$. 
+
+Thus, \( w(M^*) = w(M_w) \).  
+Hence, \( M^* \) is both maximum-size and maximum-weight. i.e., for every matching $M$ in $G$, we have
+both $w(M)\leq w(M^*)$ and $|M|\leq |M^*|$.
 
 
 
@@ -98,6 +243,82 @@ Given a schematic like this, Lyber's goal is to serve as many customers (labeled
         
         Show how to assign weights to the patients $p_0,\ldots,p_3$ so that there is no matching that simultaneously maximizes $w(M)$ and $|M|$ over all matchings $M$ that satisfy the paired donor-patient constraint.
 
+
+We use the same graph I've sketched in the figure below the question. We can assign weights:
+\(w(p_0)=100,\ w(p_1)=2,\ w(p_2)=9,\ w(p_3)=1\),
+and we know that donors have weight \(0\).
+We know that the weight of a matching is as follows:
+\(w(M)=\sum_{v\in \cup M} w(v)\).
+
+All feasible matchings have to satisfy the paired donor–patient constraint:
+each pair \((d_i,p_j)\) can be added to any matching $M$ only if the donor $d_i$ gives to $p_j$, and $p_i$ receives a donor. (if $i = j$ this statement is satisfied by $(d_i, p_i)$ if it is a valid edge in the graph. 
+
+Our first claim is the Weight maximizer uses the 2-cycle and has size 2:
+
+We use the matching:
+\[
+M_w=\{(d_0,p_1),(d_1,p_0)\}.
+\]
+This matches \(p_0\) and \(p_1\), so
+\[
+w(M_w)=100+2=102,\qquad |M_w|=2.
+\]
+
+
+\medskip
+Our second claim is that the Size maximizer uses the 3-cycle and has weight 12:
+
+We use the matching: 
+\[
+M_s=\{(d_1,p_2),(d_2,p_3),(d_3,p_1)\}.
+\]
+This is feasible (because each pair’s donor and patient are simultaneously used),
+and it matches three patients, so
+\[
+|M_s|=3,\qquad w(M_s)=2+9+1=12.
+\]
+
+\medskip
+
+So, the weight-maximizing matching is \(M_w\) (weight \(102\), size \(2\)),
+The size-maximizing matching is \(M_s\) (size \(3\), weight \(12\)).
+And so, under the paired donor–patient constraint, it's true that no single matching
+simultaneously maximizes both \(w(M)\) and \(|M|\) for these weights.
+
+
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Screenshot 2025-11-04 at 11.56.31 PM.png}
+    \caption{2(c)}
+    \label{fig:placeholder}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
   
     
     
@@ -113,6 +334,12 @@ Given a schematic like this, Lyber's goal is to serve as many customers (labeled
  Then your engineers will design an algorithm that finds a matching maximizing $\val(M)$. 
 
  Describe some core characteristics your metric $\val$ ought to have and explain why you think those characteristics are ethically justified, drawing from at least one concept or discourse from the ethical \& social considerations lecture/chapter as well as your personal judgment. Your answer should take the form of a short paragraph (less than 200 words should suffice). 
+
+I think that the calculation of the value should heavily prioritize age and household income, because I strongly believe in the Rawlsian worldview as an FGLI student. Since I want to prioritize the worst-off, we think of the person whose situation is the worst, i.e. the person who is the oldest (most frail, closest to death), and the person who has the lowest household income (who probably can't afford to wait and is already in worse condition because of their current financial situation and need to support their family). We should design algorithms with the most vulnerable and disadvantaged people in mind. Taking into consideration the estimated gain in QALY is also important as helping those who stand to gain the most from the transplant is utilitarian and can be good for the overall benefit of society.  While Rawlsian makes sure we don't neglect the worst-off, adding this utilitarian component can help us balance these principles to make a just and efficient system. 
+
+
+
+ 
 
 \item Once you're done with this problem set, please fill out \href{https://forms.gle/kFutRY2Ni6JYcroe9}{this survey} so that we can gather students' thoughts on the problem set, and the class in general. It's not required, but we really appreciate all responses!
 
